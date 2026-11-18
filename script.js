@@ -2567,7 +2567,6 @@
     const loader = document.getElementById('intro-loader');
     const brandText = document.getElementById('intro-brand');
     const navLogo = document.querySelector('.site-header .brand-wordmark');
-    const skipBtn = document.getElementById('btn-skip-intro');
 
     if (!loader || !brandText) {
       if (loader) loader.hidden = true;
@@ -2598,7 +2597,6 @@
       if (e.key === 'Escape') finishIntroNow();
     }
 
-    skipBtn?.addEventListener('click', finishIntroNow);
     document.addEventListener('keydown', onIntroEscape);
 
     // Tahap 1: Judul "Jelajahin" muncul halus di tengah

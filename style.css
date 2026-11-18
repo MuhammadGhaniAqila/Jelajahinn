@@ -288,30 +288,6 @@ body.is-intro-active:not(.is-intro-revealing) .header-actions {
   opacity: 0;
 }
 
-.intro-loader.is-revealing .intro-skip-btn {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.intro-skip-btn {
-  position: absolute;
-  inset-block-end: max(1.5rem, env(safe-area-inset-bottom, 0px));
-  inset-inline-end: max(1.5rem, env(safe-area-inset-right, 0px));
-  z-index: 8;
-  padding: 0.45rem 0.95rem;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  border-radius: var(--radius-pill);
-  background: rgba(15, 23, 42, 0.45);
-  color: rgba(255, 255, 255, 0.88);
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-.intro-skip-btn:hover {
-  background: rgba(255, 255, 255, 0.16);
-  color: #FFFFFF;
-}
-
 .primary-nav {
   display: flex;
   align-items: center;
