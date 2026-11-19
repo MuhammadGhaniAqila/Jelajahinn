@@ -913,6 +913,7 @@
   }
 
   function renderOrbitalFrame() {
+    if (!coverflowStage || !heroTitle || !heroOverlay || !heroBgA || !heroBgB) return;
     const total = heroRides.length;
     if (!total || heroCardNodes.length === 0) return;
 
@@ -1037,6 +1038,7 @@
   }
 
   function buildHeroCarousel() {
+    if (!coverflowStage || !heroTitle || !heroBgA) return;
     coverflowStage.innerHTML = '';
     heroCardNodes = [];
 
@@ -1144,83 +1146,85 @@
   const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
   const heroSectionEl = document.getElementById('beranda');
 
-  heroSectionEl.addEventListener('pointermove', (e) => {
-    if (e.pointerType !== 'mouse' || !finePointerQuery.matches || reducedMotionQuery.matches) return;
-    const rect = coverflowStage.getBoundingClientRect();
-    if (!rect.width || !rect.height) return;
+  if (heroSectionEl && coverflowStage && heroCarousel) {
+    heroSectionEl.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse' || !finePointerQuery.matches || reducedMotionQuery.matches) return;
+      const rect = coverflowStage.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
 
-    const normX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-    const normY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
-    pointerTargetX = Math.max(-1, Math.min(1, normX));
-    pointerTargetY = Math.max(-1, Math.min(1, normY));
+      const normX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      const normY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+      pointerTargetX = Math.max(-1, Math.min(1, normX));
+      pointerTargetY = Math.max(-1, Math.min(1, normY));
 
-    const total = heroRides.length;
-    const activeMod = ((targetHeroStep % total) + total) % total;
-    const activeCard = heroCardNodes[activeMod];
-    if (activeCard) {
-      const cr = activeCard.getBoundingClientRect();
-      const insideCenter =
-        e.clientX >= cr.left && e.clientX <= cr.right && e.clientY >= cr.top && e.clientY <= cr.bottom;
-      hoverTargetLift = insideCenter ? 1 : 0;
-    }
+      const total = heroRides.length;
+      const activeMod = ((targetHeroStep % total) + total) % total;
+      const activeCard = heroCardNodes[activeMod];
+      if (activeCard) {
+        const cr = activeCard.getBoundingClientRect();
+        const insideCenter =
+          e.clientX >= cr.left && e.clientX <= cr.right && e.clientY >= cr.top && e.clientY <= cr.bottom;
+        hoverTargetLift = insideCenter ? 1 : 0;
+      }
 
-    ensureHeroLoop();
-  });
+      ensureHeroLoop();
+    });
 
-  heroSectionEl.addEventListener('pointerleave', () => {
-    pointerTargetX = 0;
-    pointerTargetY = 0;
-    hoverTargetLift = 0;
-    ensureHeroLoop();
-  });
+    heroSectionEl.addEventListener('pointerleave', () => {
+      pointerTargetX = 0;
+      pointerTargetY = 0;
+      hoverTargetLift = 0;
+      ensureHeroLoop();
+    });
 
-  function updateHeroVisuals() {
-    renderOrbitalFrame();
+    document.getElementById('hero-prev')?.addEventListener('click', () => {
+      moveHeroBySteps(-1);
+    });
+
+    document.getElementById('hero-next')?.addEventListener('click', () => {
+      moveHeroBySteps(1);
+    });
+
+    heroCarousel.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        moveHeroBySteps(-1);
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        moveHeroBySteps(1);
+      }
+    });
+
+    // Dukungan swipe sentuh pada mobile / tablet
+    let touchStartX = null;
+    let touchStartY = null;
+    heroCarousel.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) return;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    heroCarousel.addEventListener('touchend', (e) => {
+      if (touchStartX === null || e.changedTouches.length !== 1) return;
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      touchStartX = null;
+      touchStartY = null;
+      if (Math.abs(dx) > 42 && Math.abs(dx) > Math.abs(dy)) {
+        moveHeroBySteps(dx < 0 ? 1 : -1);
+      }
+    }, { passive: true });
   }
 
-  document.getElementById('hero-prev').addEventListener('click', () => {
-    moveHeroBySteps(-1);
-  });
-
-  document.getElementById('hero-next').addEventListener('click', () => {
-    moveHeroBySteps(1);
-  });
-
-  heroCarousel.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft') {
-      e.preventDefault();
-      moveHeroBySteps(-1);
-    } else if (e.key === 'ArrowRight') {
-      e.preventDefault();
-      moveHeroBySteps(1);
-    }
-  });
-
-  // Dukungan swipe sentuh pada mobile / tablet
-  let touchStartX = null;
-  let touchStartY = null;
-  heroCarousel.addEventListener('touchstart', (e) => {
-    if (e.touches.length !== 1) return;
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-  }, { passive: true });
-
-  heroCarousel.addEventListener('touchend', (e) => {
-    if (touchStartX === null || e.changedTouches.length !== 1) return;
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    const dy = e.changedTouches[0].clientY - touchStartY;
-    touchStartX = null;
-    touchStartY = null;
-    if (Math.abs(dx) > 42 && Math.abs(dx) > Math.abs(dy)) {
-      moveHeroBySteps(dx < 0 ? 1 : -1);
-    }
-  }, { passive: true });
+  function updateHeroVisuals() {
+    if (coverflowStage && heroCardNodes.length > 0) renderOrbitalFrame();
+  }
 
   /* ------------------------------------------------------------------------
-     8. Navbar Sticky State & Active Scroll Indicator
+     8. Navbar Sticky State, Transisi Halaman Penuh, & Active Link
      ------------------------------------------------------------------------ */
   const siteHeader = document.getElementById('site-header');
-  const heroSection = document.getElementById('beranda');
+  const heroVisibilityTarget = document.getElementById('beranda') || document.getElementById('page-hero');
   const navLinks = document.querySelectorAll('.primary-nav .nav-link[data-nav]');
 
   function setActiveNav(navKey) {
@@ -1229,45 +1233,54 @@
     });
   }
 
-  const heroVisibilityObserver = new IntersectionObserver(
-    (entries) => {
-      const entry = entries[0];
-      siteHeader.classList.toggle('is-scrolled', !entry.isIntersecting);
-    },
-    { threshold: 0.14 }
-  );
-  heroVisibilityObserver.observe(heroSection);
+  if (siteHeader && heroVisibilityTarget) {
+    const heroVisibilityObserver = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        siteHeader.classList.toggle('is-scrolled', !entry.isIntersecting);
+      },
+      { threshold: 0.14 }
+    );
+    heroVisibilityObserver.observe(heroVisibilityTarget);
+  }
 
-  const sectionMap = [
-    { id: 'beranda', nav: 'beranda' },
-    { id: 'kuota', nav: 'beranda' },
-    { id: 'wahana', nav: 'wahana' },
-    { id: 'paket', nav: 'paket' },
-    { id: 'cara-kerja', nav: 'cara-kerja' },
-  ];
+  function navigateWithTransition(targetUrl) {
+    const supportsNativeViewTransition = 'onpagereveal' in window;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (supportsNativeViewTransition || reducedMotion) {
+      window.location.href = targetUrl;
+      return;
+    }
+    document.body.classList.add('is-page-leaving');
+    setTimeout(() => {
+      window.location.href = targetUrl;
+    }, 210);
+  }
 
-  const sectionObserver = new IntersectionObserver(
-    (entries) => {
-      const visible = entries
-        .filter((en) => en.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-      if (!visible) return;
-      const match = sectionMap.find((s) => s.id === visible.target.id);
-      if (match) setActiveNav(match.nav);
-    },
-    { threshold: [0.25, 0.55], rootMargin: '-80px 0px -35% 0px' }
-  );
-
-  sectionMap.forEach(({ id }) => {
-    const el = document.getElementById(id);
-    if (el) sectionObserver.observe(el);
+  window.addEventListener?.('pagehide', () => {
+    document.body.classList.remove('is-page-leaving');
   });
+
+  if (!('onpagereveal' in window)) {
+    document.addEventListener('click', (e) => {
+      const anchor = e.target.closest?.('a[href]');
+      if (!anchor) return;
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || anchor.target === '_blank') return;
+      const href = anchor.getAttribute('href') || '';
+      if (!href || href.startsWith('#') || href.startsWith('http')) return;
+      if (href.includes('.html')) {
+        e.preventDefault();
+        navigateWithTransition(href);
+      }
+    });
+  }
 
   /* ------------------------------------------------------------------------
      9. Section Info Taman & Cek Kuota Harian (kuota_harians)
      ------------------------------------------------------------------------ */
   let selectedQuotaDate = CalendarDate.todayISO();
 
+  const todayQuotaCard = document.getElementById('today-quota-card');
   const todayDateLabel = document.getElementById('today-date-label');
   const todayOpBadge = document.getElementById('today-op-badge');
   const todayHoursVal = document.getElementById('today-hours-value');
@@ -1283,6 +1296,20 @@
     const today = CalendarDate.todayISO();
     const todayRec = getQuotaForDate(today);
 
+    if (footerTodayStatus && todayRec) {
+      if (todayRec.status_operasional === 'Buka' && todayRec.kuota_tersedia > 0) {
+        footerTodayStatus.textContent = `BUKA (${todayRec.jam_buka} – ${todayRec.jam_tutup} WIB)`;
+      } else if (todayRec.status_operasional === 'Buka') {
+        footerTodayStatus.textContent = 'BUKA · KUOTA PENUH';
+      } else {
+        footerTodayStatus.textContent = 'TUTUP';
+      }
+    }
+
+    if (!todayQuotaCard || !todayDateLabel || !todayOpBadge || !todayHoursVal || !todayQuotaRem || !quotaDatePicker || !quickDatesWrap) {
+      return;
+    }
+
     todayDateLabel.textContent = CalendarDate.formatFullID(today);
 
     if (todayRec.status_operasional === 'Buka' && todayRec.kuota_tersedia > 0) {
@@ -1290,19 +1317,16 @@
       todayOpBadge.innerHTML = '<span class="pill-indicator" aria-hidden="true"></span><span>BUKA</span>';
       todayHoursVal.textContent = `${todayRec.jam_buka} – ${todayRec.jam_tutup} WIB`;
       todayQuotaRem.textContent = `${formatNumberID(todayRec.kuota_tersedia)} dari ${formatNumberID(todayRec.kuota_total)} kuota tersisa`;
-      footerTodayStatus.textContent = `BUKA (${todayRec.jam_buka} – ${todayRec.jam_tutup} WIB)`;
     } else if (todayRec.status_operasional === 'Buka') {
       todayOpBadge.className = 'status-pill status-pill-warn';
       todayOpBadge.innerHTML = '<span class="pill-indicator" aria-hidden="true"></span><span>KUOTA PENUH</span>';
       todayHoursVal.textContent = `${todayRec.jam_buka} – ${todayRec.jam_tutup} WIB`;
       todayQuotaRem.textContent = `0 dari ${formatNumberID(todayRec.kuota_total)} kuota tersisa`;
-      footerTodayStatus.textContent = `BUKA · KUOTA PENUH`;
     } else {
       todayOpBadge.className = 'status-pill status-pill-closed';
       todayOpBadge.innerHTML = '<span class="pill-indicator" aria-hidden="true"></span><span>TUTUP</span>';
       todayHoursVal.textContent = 'Tutup Operasional';
       todayQuotaRem.textContent = 'Tidak ada kuota tersedia';
-      footerTodayStatus.textContent = 'TUTUP';
     }
 
     const total = todayRec.kuota_total || 1;
@@ -1403,13 +1427,13 @@
     }
   }
 
-  quotaDatePicker.addEventListener('change', (e) => {
+  quotaDatePicker?.addEventListener('change', (e) => {
     if (!e.target.value) return;
     selectedQuotaDate = e.target.value;
     renderQuotaSection();
   });
 
-  document.getElementById('btn-book-today').addEventListener('click', () => {
+  document.getElementById('btn-book-today')?.addEventListener('click', () => {
     openBookingModal(null, CalendarDate.todayISO());
   });
 
@@ -1432,6 +1456,7 @@
   const ridesEmptyState = document.getElementById('rides-empty-state');
 
   function updateHeightSliderProgress() {
+    if (!filterHeightRange) return;
     const min = Number(filterHeightRange.min);
     const max = Number(filterHeightRange.max);
     const val = Number(filterHeightRange.value);
@@ -1456,6 +1481,7 @@
   }
 
   function renderCatalog() {
+    if (!ridesGrid || !heightFilterSummary || !ridesEmptyState) return;
     const filtered = getFilteredRides();
     const safeForHeightTotal = db.wahanas.filter(
       (r) => r.tinggi_minimal_cm <= catalogFilters.tinggiCm
@@ -1600,11 +1626,29 @@
   }
 
   function jumpToRideInCatalog(rideId) {
+    if (!ridesGrid) {
+      navigateWithTransition(`wahana.html?fokus=${encodeURIComponent(rideId)}#katalog-wahana`);
+      return;
+    }
     resetAllFilters(false);
     catalogFilters.highlightedRideId = rideId;
     renderCatalog();
-    const targetCard = document.getElementById(`card-${rideId}`) || document.getElementById('wahana');
-    targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const targetCard =
+      document.getElementById(`card-${rideId}`) ||
+      document.getElementById('katalog-wahana') ||
+      document.getElementById('wahana');
+    targetCard?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function applyZonaFilter(zonaKey) {
+    catalogFilters.zona = zonaKey || 'Semua';
+    catalogFilters.highlightedRideId = null;
+    document.querySelectorAll('#filter-zona-group .filter-chip').forEach((b) => {
+      const active = b.dataset.zona === catalogFilters.zona;
+      b.classList.toggle('is-selected', active);
+      b.setAttribute('aria-pressed', String(active));
+    });
+    renderCatalog();
   }
 
   function resetAllFilters(shouldRender = true) {
@@ -1614,9 +1658,9 @@
     catalogFilters.tinggiCm = 160;
     catalogFilters.highlightedRideId = null;
 
-    filterSearchInput.value = '';
-    filterHeightRange.value = '160';
-    filterHeightNumber.value = '160';
+    if (filterSearchInput) filterSearchInput.value = '';
+    if (filterHeightRange) filterHeightRange.value = '160';
+    if (filterHeightNumber) filterHeightNumber.value = '160';
     updateHeightSliderProgress();
 
     document.querySelectorAll('#filter-zona-group .filter-chip').forEach((btn) => {
@@ -1633,26 +1677,19 @@
     if (shouldRender) renderCatalog();
   }
 
-  filterSearchInput.addEventListener('input', (e) => {
+  filterSearchInput?.addEventListener('input', (e) => {
     catalogFilters.query = e.target.value;
     catalogFilters.highlightedRideId = null;
     renderCatalog();
   });
 
-  document.getElementById('filter-zona-group').addEventListener('click', (e) => {
+  document.getElementById('filter-zona-group')?.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-zona]');
     if (!btn) return;
-    catalogFilters.zona = btn.dataset.zona;
-    catalogFilters.highlightedRideId = null;
-    document.querySelectorAll('#filter-zona-group .filter-chip').forEach((b) => {
-      const active = b === btn;
-      b.classList.toggle('is-selected', active);
-      b.setAttribute('aria-pressed', String(active));
-    });
-    renderCatalog();
+    applyZonaFilter(btn.dataset.zona);
   });
 
-  document.getElementById('filter-keramaian-group').addEventListener('click', (e) => {
+  document.getElementById('filter-keramaian-group')?.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-keramaian]');
     if (!btn) return;
     catalogFilters.keramaian = btn.dataset.keramaian;
@@ -1669,23 +1706,23 @@
     const clamped = Math.min(200, Math.max(80, Number(rawVal) || 80));
     catalogFilters.tinggiCm = clamped;
     catalogFilters.highlightedRideId = null;
-    filterHeightRange.value = String(clamped);
-    filterHeightNumber.value = String(clamped);
+    if (filterHeightRange) filterHeightRange.value = String(clamped);
+    if (filterHeightNumber) filterHeightNumber.value = String(clamped);
     updateHeightSliderProgress();
     renderCatalog();
   }
 
-  filterHeightRange.addEventListener('input', (e) => syncHeightValue(e.target.value));
-  filterHeightNumber.addEventListener('change', (e) => syncHeightValue(e.target.value));
+  filterHeightRange?.addEventListener('input', (e) => syncHeightValue(e.target.value));
+  filterHeightNumber?.addEventListener('change', (e) => syncHeightValue(e.target.value));
 
   document.querySelectorAll('.preset-btn[data-height]').forEach((btn) => {
     btn.addEventListener('click', () => syncHeightValue(btn.dataset.height));
   });
 
-  document.getElementById('btn-reset-filters').addEventListener('click', () => resetAllFilters(true));
-  document.getElementById('btn-empty-reset').addEventListener('click', () => resetAllFilters(true));
+  document.getElementById('btn-reset-filters')?.addEventListener('click', () => resetAllFilters(true));
+  document.getElementById('btn-empty-reset')?.addEventListener('click', () => resetAllFilters(true));
 
-  ridesGrid.addEventListener('click', (e) => {
+  ridesGrid?.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-ride-action]');
     if (!btn) return;
     const action = btn.dataset.rideAction;
@@ -1816,6 +1853,7 @@
   const packagesGrid = document.getElementById('packages-grid');
 
   function renderPackages() {
+    if (!packagesGrid) return;
     packagesGrid.innerHTML = '';
     db.paket_tikets.forEach((pkg) => {
       const card = document.createElement('article');
@@ -2529,8 +2567,28 @@
   btnOpenAuth.addEventListener('click', () => openAuthModal('login'));
   document.getElementById('btn-open-booking').addEventListener('click', () => openBookingModal());
   document.getElementById('btn-nav-eticket').addEventListener('click', () => openETicketDrawer());
-  document.getElementById('btn-catalog-open-eticket').addEventListener('click', () => openETicketDrawer());
-  document.getElementById('btn-footer-eticket').addEventListener('click', () => openETicketDrawer());
+  document.getElementById('btn-catalog-open-eticket')?.addEventListener('click', () => openETicketDrawer());
+  document.getElementById('btn-footer-eticket')?.addEventListener('click', () => openETicketDrawer());
+  document.getElementById('btn-editorial-open-eticket')?.addEventListener('click', () => openETicketDrawer());
+
+  document.querySelectorAll('[data-editorial-open-eticket]').forEach((btn) => {
+    btn.addEventListener('click', () => openETicketDrawer());
+  });
+  document.querySelectorAll('[data-editorial-book]').forEach((btn) => {
+    btn.addEventListener('click', () => openBookingModal());
+  });
+  document.querySelectorAll('[data-editorial-package]').forEach((btn) => {
+    btn.addEventListener('click', () => openBookingModal(btn.dataset.editorialPackage));
+  });
+  document.querySelectorAll('[data-editorial-ride]').forEach((btn) => {
+    btn.addEventListener('click', () => jumpToRideInCatalog(btn.dataset.editorialRide));
+  });
+  document.querySelectorAll('[data-editorial-zona]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      applyZonaFilter(btn.dataset.editorialZona);
+      document.getElementById('katalog-wahana')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
 
   btnMobileMenu.addEventListener('click', () => {
     btnMobileMenu.setAttribute('aria-expanded', 'true');
@@ -2589,11 +2647,34 @@
       return;
     }
 
+    let alreadyPlayed = false;
+    try {
+      alreadyPlayed = typeof sessionStorage !== 'undefined' && sessionStorage.getItem('jelajahin_intro_done') === '1';
+    } catch {
+      alreadyPlayed = false;
+    }
+    const navEntry =
+      typeof performance?.getEntriesByType === 'function' ? performance.getEntriesByType('navigation')?.[0] : null;
+    const isReload = navEntry?.type === 'reload';
+    const skippedByHead = document.documentElement?.dataset?.skipIntro === '1';
+
+    if (skippedByHead || (alreadyPlayed && !isReload)) {
+      loader.hidden = true;
+      document.body.classList.remove('is-intro-active', 'is-intro-revealing');
+      return;
+    }
+
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reducedMotion || typeof requestAnimationFrame !== 'function') {
       loader.hidden = true;
       document.body.classList.remove('is-intro-active', 'is-intro-revealing');
       return;
+    }
+
+    try {
+      sessionStorage?.setItem('jelajahin_intro_done', '1');
+    } catch {
+      // Abaikan bila sessionStorage dibatasi
     }
 
     let introFinished = false;
@@ -2789,6 +2870,42 @@
     renderCatalog();
     renderPackages();
     updateHeaderUserState();
+
+    // Cek parameter deep-link antar halaman (misal wahana.html?fokus=whn-halilintar)
+    if (typeof window.location?.search === 'string' && window.location.search) {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const fokusRide = params.get('fokus');
+        const zonaParam = params.get('zona');
+        if (zonaParam && ridesGrid) {
+          applyZonaFilter(zonaParam);
+        }
+        if (fokusRide && ridesGrid) {
+          catalogFilters.highlightedRideId = fokusRide;
+          renderCatalog();
+          setTimeout(() => {
+            document.getElementById(`card-${fokusRide}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 120);
+        }
+      } catch {
+        // Abaikan query tidak valid
+      }
+    }
+
+    // Pembaruan nomor urut interaktif pada 4 kartu wisata Beranda (01 - 04)
+    const wisataCounterNum = document.getElementById('wisata-counter-num');
+    if (wisataCounterNum) {
+      document.querySelectorAll('.wisata-card[data-wisata-idx]').forEach((card) => {
+        const idxLabel = card.dataset.wisataIdx;
+        card.addEventListener('pointerenter', () => {
+          wisataCounterNum.textContent = idxLabel;
+        });
+        card.addEventListener('focus', () => {
+          wisataCounterNum.textContent = idxLabel;
+        });
+      });
+    }
+
     initIntroLoader();
   }
 

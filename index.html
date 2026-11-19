@@ -10,9 +10,22 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://images.unsplash.com">
   <link rel="stylesheet" href="style.css">
+  <link rel="expect" href="#beranda" blocking="render">
 </head>
-<body class="is-intro-active">
-  <!-- Loading Start Intro: 3D Perspective Tunnel Auto-Play dengan Judul Tengah "Jelajahin" -->
+<body class="page-home is-intro-active">
+  <script>
+    (function () {
+      try {
+        var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+        var isReload = nav && nav.type === 'reload';
+        if (sessionStorage.getItem('jelajahin_intro_done') === '1' && !isReload) {
+          document.body.classList.remove('is-intro-active');
+          document.documentElement.dataset.skipIntro = '1';
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <!-- Loading Start Intro: Hanya saat website dibuka pertama kali atau di-refresh -->
   <div class="intro-loader" id="intro-loader" role="presentation" aria-hidden="true">
     <div class="intro-tunnel-bg" aria-hidden="true">
       <div class="intro-tunnel-grid"></div>
@@ -33,16 +46,16 @@
   <header class="site-header" id="site-header">
     <div class="header-inner">
       <div class="header-left">
-        <a href="#beranda" class="brand-logo" aria-label="Jelajahin — Kembali ke Beranda">
+        <a href="index.html" class="brand-logo" aria-label="Jelajahin — Kembali ke Beranda">
           <span class="brand-wordmark">Jelajahin</span>
         </a>
 
         <nav class="primary-nav" aria-label="Navigasi utama">
           <ul class="nav-list">
-            <li><a href="#beranda" class="nav-link is-active" data-nav="beranda">BERANDA</a></li>
-            <li><a href="#wahana" class="nav-link" data-nav="wahana">WAHANA</a></li>
-            <li><a href="#paket" class="nav-link" data-nav="paket">PAKET TIKET</a></li>
-            <li><a href="#cara-kerja" class="nav-link" data-nav="cara-kerja">CARA KERJA</a></li>
+            <li><a href="index.html" class="nav-link is-active" data-nav="beranda">BERANDA</a></li>
+            <li><a href="wahana.html" class="nav-link" data-nav="wahana">WAHANA</a></li>
+            <li><a href="paket.html" class="nav-link" data-nav="paket">PAKET TIKET</a></li>
+            <li><a href="cara-kerja.html" class="nav-link" data-nav="cara-kerja">CARA KERJA</a></li>
             <li>
               <button type="button" class="nav-link nav-link-btn" id="btn-nav-eticket" data-nav="eticket">
                 E-TICKET SAYA
@@ -118,313 +131,89 @@
       </div>
     </section>
 
-    <!-- 2. SECTION INFO TAMAN & CEK KUOTA HARIAN (kuota_harians) -->
-    <section id="kuota" class="section-block section-quota">
+    <!-- 2. SECTION WISATA BERANDA (4 Kartu Vertikal Lancip + Huruf Sudut + Deskripsi Wisata) -->
+    <section id="wisata-beranda" class="wisata-showcase" aria-label="Sorotan Zona Wisata Dunia Fantasi Ancol">
       <div class="container">
-        <div class="section-header">
-          <span class="section-eyebrow">DUNIA FANTASI · ANCOL JAKARTA</span>
-          <h2 class="section-title">Info Operasional Taman &amp; Cek Kuota Harian</h2>
-          <p class="section-desc">
-            Pastikan tanggal kunjungan Anda masih memiliki kuota tersedia sebelum melakukan pemesanan tiket terusan.
+        <div class="wisata-meta-bar">
+          <div class="wisata-counter" aria-label="Urutan sorotan wisata">
+            <span class="wisata-counter-num" id="wisata-counter-num">01</span>
+            <span class="wisata-counter-total">/04</span>
+          </div>
+
+          <ul class="wisata-quick-links">
+            <li><a href="wahana.html">Wahana</a></li>
+            <li><a href="paket.html">Paket Tiket</a></li>
+            <li><a href="cara-kerja.html">Cara Kerja</a></li>
+            <li><a href="wahana.html#kuota">Kuota Harian</a></li>
+          </ul>
+        </div>
+
+        <div class="wisata-cards-grid" id="wisata-cards-grid">
+          <a href="wahana.html?fokus=whn-halilintar#katalog-wahana" class="wisata-card" data-wisata-idx="01" aria-label="Zona Ekstrem — Halilintar">
+            <div class="wisata-card-frame">
+              <img src="https://images.unsplash.com/photo-1754045473527-d74b9bb55e80?auto=format&fit=crop&w=800&q=80" alt="Lintasan roller coaster Halilintar di Dufan Ancol" width="600" height="870" loading="lazy">
+              <div class="wisata-card-scrim" aria-hidden="true"></div>
+              <span class="wisata-card-hover-label">Halilintar · Ekstrem</span>
+            </div>
+            <span class="wisata-letter" aria-hidden="true">Z</span>
+          </a>
+
+          <a href="wahana.html?fokus=whn-niagara#katalog-wahana" class="wisata-card" data-wisata-idx="02" aria-label="Zona Air — Niagara Gara">
+            <div class="wisata-card-frame">
+              <img src="https://images.unsplash.com/photo-1529281901731-f9b6ec160180?auto=format&fit=crop&w=800&q=80" alt="Wahana air Niagara Gara menyusuri kanal tropis" width="600" height="870" loading="lazy">
+              <div class="wisata-card-scrim" aria-hidden="true"></div>
+              <span class="wisata-card-hover-label">Niagara Gara · Air</span>
+            </div>
+            <span class="wisata-letter" aria-hidden="true">O</span>
+          </a>
+
+          <a href="wahana.html?fokus=whn-istana-boneka#katalog-wahana" class="wisata-card" data-wisata-idx="03" aria-label="Zona Keluarga — Istana Boneka">
+            <div class="wisata-card-frame">
+              <img src="https://images.unsplash.com/photo-1504027973709-58986e840e79?auto=format&fit=crop&w=800&q=80" alt="Wahana keluarga Istana Boneka Dufan Ancol" width="600" height="870" loading="lazy">
+              <div class="wisata-card-scrim" aria-hidden="true"></div>
+              <span class="wisata-card-hover-label">Istana Boneka · Keluarga</span>
+            </div>
+            <span class="wisata-letter" aria-hidden="true">N</span>
+          </a>
+
+          <a href="wahana.html?fokus=whn-bianglala#katalog-wahana" class="wisata-card" data-wisata-idx="04" aria-label="Panorama Teluk Jakarta — Biang Lala">
+            <div class="wisata-card-frame">
+              <img src="https://images.unsplash.com/photo-1570494362424-2f53c0b9698b?auto=format&fit=crop&w=800&q=80" alt="Kincir ria Biang Lala menghadap langit senja Ancol" width="600" height="870" loading="lazy">
+              <div class="wisata-card-scrim" aria-hidden="true"></div>
+              <span class="wisata-card-hover-label">Biang Lala · Panorama</span>
+            </div>
+            <span class="wisata-letter" aria-hidden="true">A</span>
+          </a>
+        </div>
+
+        <div class="wisata-lead-wrap">
+          <p class="wisata-lead">
+            Dunia Fantasi (Dufan) Ancol menghadirkan petualangan taman rekreasi tematik terbaik di pesisir Teluk Jakarta. Mulai dari lintasan roller coaster berkecepatan tinggi, serunya petualangan air tropis, hingga wahana keluarga bersejarah yang terhubung langsung dengan E-Ticket QR dan antrean virtual Jelajahin tanpa antre panjang di lapangan.
           </p>
-        </div>
-
-        <div class="quota-layout">
-          <!-- Status Hari Ini -->
-          <article class="surface-card today-quota-card" id="today-quota-card">
-            <div class="today-card-top">
-              <div>
-                <p class="card-kicker">Status Kunjungan Hari Ini</p>
-                <h3 class="today-date-label" id="today-date-label">Rabu, 18 November 2026</h3>
-              </div>
-              <span class="status-pill status-pill-open" id="today-op-badge">
-                <span class="pill-indicator" aria-hidden="true"></span>
-                <span>BUKA</span>
-              </span>
-            </div>
-
-            <div class="today-metrics-grid">
-              <div class="metric-box">
-                <span class="metric-label">Jam Operasional</span>
-                <strong class="metric-value" id="today-hours-value">10.00 – 18.00 WIB</strong>
-              </div>
-              <div class="metric-box">
-                <span class="metric-label">Sisa Kuota Harian</span>
-                <strong class="metric-value" id="today-quota-remaining">3.420 dari 5.000 kuota tersisa</strong>
-              </div>
-            </div>
-
-            <div class="quota-progress-wrap">
-              <div class="quota-progress-meta">
-                <span>Keterisian Kuota Pengunjung</span>
-                <strong id="today-quota-percent">32% terisi</strong>
-              </div>
-              <progress id="today-quota-progress" max="5000" value="1580">32%</progress>
-            </div>
-
-            <div class="today-card-actions">
-              <button type="button" class="btn btn-primary" id="btn-book-today">
-                Pesan Tiket untuk Hari Ini
-              </button>
-              <a href="#wahana" class="btn btn-outline">Jelajahi Wahana</a>
-            </div>
-          </article>
-
-          <!-- Pemilih Tanggal & Cek Ketersediaan -->
-          <div class="surface-card quota-checker-card">
-            <div class="checker-header">
-              <h3 class="checker-title">Cek Ketersediaan Tanggal Lain</h3>
-              <p class="checker-subtitle">Pilih tanggal cepat di bawah atau tentukan tanggal pada kalender.</p>
-            </div>
-
-            <div class="date-chip-strip" id="quota-quick-dates" role="group" aria-label="Pilihan tanggal kunjungan mendatang">
-              <!-- Diisi dinamis oleh script.js -->
-            </div>
-
-            <div class="date-input-row">
-              <div class="field-group">
-                <label for="quota-date-picker">Pilih Tanggal Kunjungan</label>
-                <span id="quota-picker-hint" class="field-hint">Format: tanggal kalender kunjungan Dufan (WIB)</span>
-                <input type="date" id="quota-date-picker" aria-describedby="quota-picker-hint">
-              </div>
-            </div>
-
-            <div class="quota-result-box" id="quota-selected-result" aria-live="polite">
-              <!-- Hasil cek kuota dirender oleh script.js -->
-            </div>
+          <div class="wisata-lead-actions">
+            <a href="wahana.html" class="btn-pill-white">Jelajahi Semua Wahana</a>
+            <a href="paket.html" class="btn-pill-ghost">Pilih Paket Tiket</a>
           </div>
         </div>
-      </div>
-    </section>
-
-    <!-- 3. SECTION KATALOG & FILTER WAHANA INTERAKTIF (wahanas) -->
-    <section id="wahana" class="section-block section-catalog">
-      <div class="container">
-        <div class="section-header section-header-row">
-          <div>
-            <span class="section-eyebrow">ANTREAN VIRTUAL REAL-TIME</span>
-            <h2 class="section-title">Katalog &amp; Filter Wahana Dufan</h2>
-            <p class="section-desc">
-              Saring wahana berdasarkan zona, tingkat keramaian, dan tinggi badan pengunjung agar seluruh anggota keluarga aman bermain.
-            </p>
-          </div>
-          <div class="catalog-header-cta">
-            <button type="button" class="btn btn-secondary" id="btn-catalog-open-eticket">
-              Cek E-Ticket &amp; Antrean Saya
-            </button>
-          </div>
-        </div>
-
-        <!-- Panel Pencarian & Filter -->
-        <search class="surface-card catalog-filters-panel" aria-label="Filter dan pencarian wahana">
-          <div class="filters-grid">
-            <div class="filter-block filter-search-block">
-              <label for="filter-search">Cari Nama Wahana</label>
-              <span id="filter-search-hint" class="field-hint">Ketik nama wahana, misalnya Halilintar atau Istana Boneka</span>
-              <div class="search-input-wrap">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
-                  <circle cx="11" cy="11" r="7.5"></circle>
-                  <path d="m20 20-3.8-3.8"></path>
-                </svg>
-                <input type="search" id="filter-search" name="q" placeholder="Cari wahana Dufan..." autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" aria-describedby="filter-search-hint">
-              </div>
-            </div>
-
-            <div class="filter-block">
-              <span class="filter-group-label" id="label-filter-zona">Filter Zona Wahana</span>
-              <div class="chip-group" role="group" aria-labelledby="label-filter-zona" id="filter-zona-group">
-                <button type="button" class="filter-chip is-selected" data-zona="Semua" aria-pressed="true">Semua</button>
-                <button type="button" class="filter-chip" data-zona="Ekstrem" aria-pressed="false">Ekstrem</button>
-                <button type="button" class="filter-chip" data-zona="Keluarga" aria-pressed="false">Keluarga</button>
-                <button type="button" class="filter-chip" data-zona="Air" aria-pressed="false">Air</button>
-              </div>
-            </div>
-
-            <div class="filter-block">
-              <span class="filter-group-label" id="label-filter-keramaian">Filter Tingkat Keramaian</span>
-              <div class="chip-group" role="group" aria-labelledby="label-filter-keramaian" id="filter-keramaian-group">
-                <button type="button" class="filter-chip is-selected" data-keramaian="Semua" aria-pressed="true">Semua</button>
-                <button type="button" class="filter-chip" data-keramaian="Sepi" aria-pressed="false">Sepi (&lt; 4)</button>
-                <button type="button" class="filter-chip" data-keramaian="Sedang" aria-pressed="false">Sedang (4–11)</button>
-                <button type="button" class="filter-chip" data-keramaian="Padat" aria-pressed="false">Padat (≥ 12)</button>
-              </div>
-            </div>
-
-            <div class="filter-block filter-height-block">
-              <div class="height-label-row">
-                <label for="filter-height-range">Filter Tinggi Badan Pengunjung (cm)</label>
-                <div class="height-number-wrap">
-                  <input type="number" id="filter-height-number" min="80" max="200" step="1" value="160" aria-label="Tinggi badan pengunjung dalam sentimeter">
-                  <span class="unit-suffix">cm</span>
-                </div>
-              </div>
-              <span id="filter-height-hint" class="field-hint">Geser atau ketik tinggi badan (80 – 200 cm) untuk menampilkan wahana yang aman dinaiki</span>
-              <input type="range" id="filter-height-range" min="80" max="200" step="5" value="160" aria-describedby="filter-height-hint">
-              <div class="height-presets">
-                <button type="button" class="preset-btn" data-height="110">Anak (110 cm)</button>
-                <button type="button" class="preset-btn" data-height="130">Remaja (130 cm)</button>
-                <button type="button" class="preset-btn" data-height="160">Semua (≥ 160 cm)</button>
-                <button type="button" class="btn-link-reset" id="btn-reset-filters">Reset Semua Filter</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Ringkasan Kesesuaian Tinggi Badan & Hasil Filter -->
-          <div class="filter-summary-banner" id="height-filter-summary" aria-live="polite">
-            Menampilkan 8 dari 8 wahana yang aman dinaiki untuk tinggi badan 160 cm.
-          </div>
-        </search>
-
-        <!-- Legenda Status Lampu & Keramaian (Selalu pakai teks + ikon) -->
-        <div class="legend-bar" aria-label="Keterangan indikator status wahana dan keramaian">
-          <div class="legend-group">
-            <span class="legend-title">Lampu Status:</span>
-            <span class="status-badge status-hijau"><span class="badge-icon" aria-hidden="true">●</span> Hijau · Siap Naik</span>
-            <span class="status-badge status-merah"><span class="badge-icon" aria-hidden="true">■</span> Merah · Sedang Bermain</span>
-            <span class="status-badge status-maintenance"><span class="badge-icon" aria-hidden="true">▲</span> Oranye · Maintenance</span>
-          </div>
-          <div class="legend-group">
-            <span class="legend-title">Keramaian:</span>
-            <span class="crowd-badge crowd-sepi">Sepi (&lt; 4 pengantre)</span>
-            <span class="crowd-badge crowd-sedang">Sedang (4–11)</span>
-            <span class="crowd-badge crowd-padat">Padat (≥ 12)</span>
-          </div>
-        </div>
-
-        <!-- Grid Kartu Wahana -->
-        <div class="rides-grid" id="rides-grid">
-          <!-- Kartu wahana dirender oleh script.js -->
-        </div>
-
-        <div class="empty-state-card" id="rides-empty-state" hidden>
-          <h3>Tidak ada wahana yang sesuai dengan filter Anda</h3>
-          <p>Coba ubah kata kunci pencarian, pilih zona lain, atau naikkan batas tinggi badan pengunjung.</p>
-          <button type="button" class="btn btn-primary" id="btn-empty-reset">Tampilkan Semua Wahana</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- 4. SECTION PILIHAN PAKET TIKET (paket_tikets) -->
-    <section id="paket" class="section-block section-packages">
-      <div class="container">
-        <div class="section-header section-header-center">
-          <span class="section-eyebrow">TIKET TERUSAN DIGITAL</span>
-          <h2 class="section-title">Pilih Paket Tiket Kunjungan</h2>
-          <p class="section-desc">
-            Cukup bayar 1x di awal untuk menikmati seluruh wahana terusan di Dufan tanpa antre fisik berjam-jam di bawah terik matahari.
-          </p>
-        </div>
-
-        <div class="packages-grid" id="packages-grid">
-          <!-- Kartu paket tiket dirender dari paket_tikets oleh script.js -->
-        </div>
-      </div>
-    </section>
-
-    <!-- 5. SECTION CARA KERJA (ALUR KUNJUNGAN 4 LANGKAH) -->
-    <section id="cara-kerja" class="section-block section-steps">
-      <div class="container">
-        <div class="section-header section-header-center">
-          <span class="section-eyebrow">PANDUAN WISATAWAN</span>
-          <h2 class="section-title">Cara Kerja Jelajahin dalam 4 Langkah</h2>
-          <p class="section-desc">
-            Dari pemesanan tiket online hingga antrean virtual wahana langsung dari ponsel Anda.
-          </p>
-        </div>
-
-        <ol class="steps-grid">
-          <li class="surface-card step-card">
-            <span class="step-number" aria-hidden="true">01</span>
-            <div class="step-icon-box" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2"></rect>
-                <path d="M16 2v4M8 2v4M3 10h18M9 16l2 2 4-4"></path>
-              </svg>
-            </div>
-            <h3>Cek Kuota &amp; Pesan Tiket</h3>
-            <p>Pilih tanggal kunjungan yang masih tersedia beserta paket tiket terusan, lalu selesaikan simulasi pembayaran instan QRIS atau Virtual Account.</p>
-          </li>
-
-          <li class="surface-card step-card">
-            <span class="step-number" aria-hidden="true">02</span>
-            <div class="step-icon-box" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="7" height="7"></rect>
-                <rect x="14" y="3" width="7" height="7"></rect>
-                <rect x="3" y="14" width="7" height="7"></rect>
-                <path d="M14 14h3v3h-3zM20 14v7M14 20h7"></path>
-              </svg>
-            </div>
-            <h3>Simpan E-Ticket QR</h3>
-            <p>Setelah pembayaran terkonfirmasi lunas, Kode Booking dan E-Ticket QR otomatis terbit di menu <strong>E-Ticket Saya</strong> dengan status <em>Belum Check-in</em>.</p>
-          </li>
-
-          <li class="surface-card step-card">
-            <span class="step-number" aria-hidden="true">03</span>
-            <div class="step-icon-box" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"></path>
-                <path d="M7 12h10"></path>
-              </svg>
-            </div>
-            <h3>Scan QR di Gerbang Masuk</h3>
-            <p>Tunjukkan QR kepada petugas di pintu masuk kawasan Dufan hingga status tiket berubah menjadi <em>Aktif di Kawasan</em> (tersedia tombol simulasi di E-Ticket Anda).</p>
-          </li>
-
-          <li class="surface-card step-card">
-            <span class="step-number" aria-hidden="true">04</span>
-            <div class="step-icon-box" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="9"></circle>
-                <path d="M12 7v5l3 2"></path>
-              </svg>
-            </div>
-            <h3>Antre Virtual dari HP/Web</h3>
-            <p>Pilih wahana yang sesuai tinggi badan &amp; berstatus lampu hijau, ambil nomor antrean virtual, dan pantau nomor kloter serta estimasi waktu tunggu.</p>
-          </li>
-        </ol>
       </div>
     </section>
   </main>
 
-  <!-- 6. FOOTER -->
-  <footer class="site-footer">
-    <div class="container footer-grid">
-      <div class="footer-brand">
-        <span class="brand-wordmark footer-wordmark">Jelajahin</span>
-        <p class="footer-tagline">
-          Smart Tourism &amp; Hospitality · Sistem Pemesanan Tiket &amp; Antrean Wahana Virtual<br>
-          Studi Kasus: Dunia Fantasi (Dufan) Ancol, Jakarta Utara.
-        </p>
-        <p class="footer-note">
-          Mode Simulasi Wisatawan (Penyimpanan lokal browser). Belum terhubung ke gateway pembayaran bank atau dashboard operator.
-        </p>
-      </div>
-
-      <div class="footer-info">
-        <h3>Jam Operasional Taman</h3>
-        <ul class="footer-list">
-          <li><strong>Senin – Jumat:</strong> 10.00 – 18.00 WIB</li>
-          <li><strong>Akhir Pekan &amp; Libur:</strong> 10.00 – 20.00 WIB</li>
-          <li><strong>Status Hari Ini:</strong> <span id="footer-today-status">BUKA (10.00 – 18.00 WIB)</span></li>
-        </ul>
-      </div>
-
-      <nav class="footer-nav" aria-label="Tautan navigasi footer">
-        <h3>Navigasi Cepat</h3>
-        <ul class="footer-list">
-          <li><a href="#beranda">Beranda &amp; Wahana Unggulan</a></li>
-          <li><a href="#kuota">Info Taman &amp; Cek Kuota Harian</a></li>
-          <li><a href="#wahana">Katalog &amp; Filter Wahana</a></li>
-          <li><a href="#paket">Pilihan Paket Tiket</a></li>
-          <li><a href="#cara-kerja">Cara Kerja Kunjungan</a></li>
-          <li><button type="button" class="footer-btn-link" id="btn-footer-eticket">Buka E-Ticket &amp; Antrean Saya</button></li>
-        </ul>
-      </nav>
-    </div>
-
-    <div class="container footer-bottom">
-      <p>&copy; 2026 Jelajahin · Prototipe Sisi Wisatawan (Studi Kasus Dufan Ancol).</p>
+  <footer class="editorial-footer">
+    <div class="container editorial-footer-inner">
+      <a href="index.html" class="editorial-footer-brand">
+        <span>Jelajahin</span>
+      </a>
+      <ul class="editorial-footer-links">
+        <li><a href="index.html">Beranda</a></li>
+        <li><a href="wahana.html">Wahana</a></li>
+        <li><a href="paket.html">Paket Tiket</a></li>
+        <li><a href="cara-kerja.html">Cara Kerja</a></li>
+        <li><button type="button" class="footer-btn-link" id="btn-footer-eticket">E-Ticket Saya</button></li>
+      </ul>
+      <p class="editorial-footer-meta">
+        Dufan Ancol Jakarta · Status Hari Ini: <span id="footer-today-status">BUKA (10.00 – 18.00 WIB)</span>
+      </p>
     </div>
   </footer>
 
@@ -729,11 +518,11 @@
       <div class="drawer-body">
         <nav aria-label="Navigasi seluler">
           <ul class="mobile-nav-list">
-            <li><a href="#beranda" class="mobile-nav-link" data-mobile-nav="beranda">Beranda</a></li>
-            <li><a href="#kuota" class="mobile-nav-link" data-mobile-nav="kuota">Info &amp; Kuota Harian</a></li>
-            <li><a href="#wahana" class="mobile-nav-link" data-mobile-nav="wahana">Katalog Wahana</a></li>
-            <li><a href="#paket" class="mobile-nav-link" data-mobile-nav="paket">Paket Tiket</a></li>
-            <li><a href="#cara-kerja" class="mobile-nav-link" data-mobile-nav="cara-kerja">Cara Kerja</a></li>
+            <li><a href="index.html" class="mobile-nav-link" data-mobile-nav="beranda">Beranda</a></li>
+            <li><a href="wahana.html#kuota" class="mobile-nav-link" data-mobile-nav="kuota">Info &amp; Kuota Harian</a></li>
+            <li><a href="wahana.html" class="mobile-nav-link" data-mobile-nav="wahana">Katalog Wahana</a></li>
+            <li><a href="paket.html" class="mobile-nav-link" data-mobile-nav="paket">Paket Tiket</a></li>
+            <li><a href="cara-kerja.html" class="mobile-nav-link" data-mobile-nav="cara-kerja">Cara Kerja</a></li>
           </ul>
         </nav>
         <div class="mobile-nav-actions">

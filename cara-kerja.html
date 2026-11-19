@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Jelajahin — Panduan Cara Kerja E-Ticket QR, Scan Gerbang Masuk, dan Antrean Virtual Wahana Dufan Ancol.">
+  <title>Jelajahin · Cara Kerja Kunjungan &amp; Antrean Virtual</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://images.unsplash.com">
+  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1771992932748-deff485351d8?auto=format&fit=crop&w=1400&q=80" fetchpriority="high">
+  <link rel="stylesheet" href="style.css">
+  <link rel="expect" href="#page-hero" blocking="render">
+</head>
+<body class="page-editorial is-intro-active" data-page="cara-kerja">
+  <script>
+    (function () {
+      try {
+        var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+        var isReload = nav && nav.type === 'reload';
+        if (sessionStorage.getItem('jelajahin_intro_done') === '1' && !isReload) {
+          document.body.classList.remove('is-intro-active');
+          document.documentElement.dataset.skipIntro = '1';
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <!-- Loading Start Intro: Hanya saat website dibuka pertama kali atau di-refresh -->
+  <div class="intro-loader" id="intro-loader" role="presentation" aria-hidden="true">
+    <div class="intro-tunnel-bg" aria-hidden="true">
+      <div class="intro-tunnel-grid"></div>
+      <div class="intro-tunnel-aura"></div>
+      <div class="intro-tunnel-ring intro-tunnel-ring--inner"></div>
+      <div class="intro-tunnel-ring intro-tunnel-ring--outer"></div>
+    </div>
+    <div class="intro-tunnel-stage" id="intro-tunnel-stage">
+      <div class="intro-center-brand" id="intro-brand" data-text="Jelajahin">Jelajahin</div>
+      <div class="intro-tunnel-cards" id="intro-tunnel-cards"></div>
+    </div>
+  </div>
+  <a href="#konten-utama" class="skip-link visually-hidden">Langsung ke konten utama</a>
+
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <div class="header-left">
+        <a href="index.html" class="brand-logo" aria-label="Jelajahin — Kembali ke Beranda">
+          <span class="brand-wordmark">Jelajahin</span>
+        </a>
+
+        <nav class="primary-nav" aria-label="Navigasi utama">
+          <ul class="nav-list">
+            <li><a href="index.html" class="nav-link" data-nav="beranda">BERANDA</a></li>
+            <li><a href="wahana.html" class="nav-link" data-nav="wahana">WAHANA</a></li>
+            <li><a href="paket.html" class="nav-link" data-nav="paket">PAKET TIKET</a></li>
+            <li><a href="cara-kerja.html" class="nav-link is-active" data-nav="cara-kerja">CARA KERJA</a></li>
+            <li>
+              <button type="button" class="nav-link nav-link-btn" id="btn-nav-eticket" data-nav="eticket">
+                E-TICKET SAYA
+                <span class="nav-badge" id="nav-queue-badge" hidden>0</span>
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="header-actions">
+        <button type="button" class="icon-action-btn" id="btn-open-search" aria-label="Cari wahana cepat">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7.5"></circle>
+            <path d="m20 20-3.8-3.8"></path>
+          </svg>
+        </button>
+
+        <button type="button" class="auth-btn" id="btn-open-auth">
+          Masuk / Daftar
+        </button>
+
+        <button type="button" class="cta-pill-btn" id="btn-open-booking">
+          PESAN TIKET
+        </button>
+
+        <button type="button" class="mobile-menu-btn" id="btn-mobile-menu" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="mobile-nav-drawer">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+            <path d="M4 7h16"></path>
+            <path d="M4 12h16"></path>
+            <path d="M4 17h16"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="konten-utama" tabindex="-1">
+    <!-- 1. EDITORIAL BANNER HERO -->
+    <section id="page-hero" class="editorial-hero" aria-label="Pengantar Cara Kerja Jelajahin">
+      <div class="editorial-hero-bg" style="background-image: url('https://images.unsplash.com/photo-1771992932748-deff485351d8?auto=format&fit=crop&w=1400&q=80');" aria-hidden="true"></div>
+      <div class="editorial-hero-scrim" aria-hidden="true"></div>
+      <div class="container">
+        <div class="editorial-hero-content">
+          <h1 class="editorial-hero-title">Antre dari genggaman, main lebih lama</h1>
+          <p class="editorial-hero-desc">
+            Ikuti empat langkah praktis mulai dari pemesanan E-Ticket QR, pindai gerbang masuk, hingga mengambil nomor antrean kloter wahana secara real-time.
+          </p>
+          <div class="editorial-hero-actions">
+            <a href="#panduan-langkah" class="btn-pill-white">Lihat 4 Langkah</a>
+            <button type="button" class="btn-pill-ghost" data-editorial-open-eticket">Buka E-Ticket Saya</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. EDITORIAL SPOTLIGHT + OVERLAPPING 3-THUMBNAIL STRIP -->
+    <section class="editorial-spotlight" aria-label="Alur Masuk Kawasan & Status Lampu">
+      <div class="container">
+        <div class="editorial-spotlight-layout">
+          <div class="editorial-spotlight-main">
+            <img src="https://images.unsplash.com/photo-1529281901731-f9b6ec160180?auto=format&fit=crop&w=1000&q=80" alt="Pengalaman bermain wahana air tanpa antre fisik panjang" width="800" height="840" loading="lazy">
+          </div>
+
+          <div class="editorial-spotlight-body">
+            <h2 class="editorial-section-h2">Sistem Kloter &amp; Scan Gerbang</h2>
+            <p class="editorial-section-copy">
+              Setelah pembayaran selesai, tiket Anda berstatus Belum Check-in. Di menu E-Ticket Saya, tekan simulasi Scan Gerbang Masuk agar status berubah menjadi Aktif di Kawasan dan seluruh antrean virtual wahana terbuka otomatis.
+            </p>
+            <button type="button" class="btn-pill-ghost" data-editorial-open-eticket>
+              Uji Simulasi Scan QR Gerbang
+            </button>
+
+            <div class="editorial-thumb-strip" role="group" aria-label="Langkah cepat">
+              <button type="button" class="editorial-thumb-btn" data-editorial-book>
+                <img src="https://images.unsplash.com/photo-1570494362424-2f53c0b9698b?auto=format&fit=crop&w=800&q=80" alt="Langkah 1 Pesan Tiket" loading="lazy">
+                <span class="editorial-thumb-caption">01 · Pesan</span>
+              </button>
+              <button type="button" class="editorial-thumb-btn" data-editorial-open-eticket>
+                <img src="https://images.unsplash.com/photo-1756691569065-43f22ce1e1bd?auto=format&fit=crop&w=800&q=80" alt="Langkah 2 &amp; 3 Scan QR" loading="lazy">
+                <span class="editorial-thumb-caption">02 · Scan QR</span>
+              </button>
+              <a href="wahana.html" class="editorial-thumb-btn">
+                <img src="https://images.unsplash.com/photo-1754045473527-d74b9bb55e80?auto=format&fit=crop&w=800&q=80" alt="Langkah 4 Antre Virtual" loading="lazy">
+                <span class="editorial-thumb-caption">03 · Antre</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. ASYMMETRIC 3-COLUMN MOSAIC -->
+    <section class="editorial-mosaic" aria-label="Ringkasan Fitur Kunjungan">
+      <div class="container">
+        <div class="editorial-mosaic-grid">
+          <div class="editorial-mosaic-col editorial-mosaic-col--left">
+            <h2 class="editorial-mosaic-heading">Alur praktis dalam sekali sentuh</h2>
+            <button type="button" class="editorial-mosaic-card editorial-mosaic-card--compact" data-editorial-book>
+              <img src="https://images.unsplash.com/photo-1504027973709-58986e840e79?auto=format&fit=crop&w=900&q=80" alt="Booking &amp; Cek Kuota" loading="lazy">
+              <div class="editorial-mosaic-scrim">
+                <h3>Cek Kuota &amp; Bayar QRIS</h3>
+                <p>Pilih tanggal buka yang tersedia lalu selesaikan pembayaran simulasi.</p>
+              </div>
+            </button>
+          </div>
+
+          <div class="editorial-mosaic-col">
+            <button type="button" class="editorial-mosaic-card editorial-mosaic-card--tall" data-editorial-open-eticket>
+              <img src="https://images.unsplash.com/photo-1502136969935-8d8eef54d77b?auto=format&fit=crop&w=900&q=80" alt="Check-in Gerbang QR" loading="lazy">
+              <div class="editorial-mosaic-scrim">
+                <h3>Scan Gerbang &amp; Pantau Kloter</h3>
+                <p>Aktifkan tiket QR Anda di laci E-Ticket untuk memantau nomor kloter dan estimasi tunggu.</p>
+              </div>
+            </button>
+          </div>
+
+          <div class="editorial-mosaic-col">
+            <a href="wahana.html" class="editorial-mosaic-card editorial-mosaic-card--square">
+              <img src="https://images.unsplash.com/photo-1725758575869-969b8e5783bc?auto=format&fit=crop&w=900&q=80" alt="Filter Wahana" loading="lazy">
+              <div class="editorial-mosaic-scrim">
+                <h3>Ambil Antrean Virtual</h3>
+                <p>Saring tinggi badan anak agar aman lalu antre maksimal 2 atau 4 wahana sekaligus.</p>
+              </div>
+            </a>
+
+            <button type="button" class="editorial-mosaic-cta-box" data-editorial-book>
+              <span>Mulai Pesan Tiket</span>
+              <span class="editorial-mosaic-arrow" aria-hidden="true">&#8594;</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. PANDUAN 4 LANGKAH TERSTRUKTUR -->
+    <section id="panduan-langkah" class="section-block section-steps">
+      <div class="container">
+        <div class="section-header section-header-center">
+          <span class="section-eyebrow">PANDUAN WISATAWAN</span>
+          <h2 class="section-title">Cara Kerja Jelajahin dalam 4 Langkah</h2>
+          <p class="section-desc">
+            Dari pemesanan tiket online hingga antrean virtual wahana langsung dari ponsel Anda.
+          </p>
+        </div>
+
+        <ol class="steps-grid">
+          <li class="surface-card step-card">
+            <span class="step-number" aria-hidden="true">01</span>
+            <div class="step-icon-box" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                <path d="M16 2v4M8 2v4M3 10h18M9 16l2 2 4-4"></path>
+              </svg>
+            </div>
+            <h3>Cek Kuota &amp; Pesan Tiket</h3>
+            <p>Pilih tanggal kunjungan yang masih tersedia beserta paket tiket terusan, lalu selesaikan simulasi pembayaran instan QRIS atau Virtual Account.</p>
+          </li>
+
+          <li class="surface-card step-card">
+            <span class="step-number" aria-hidden="true">02</span>
+            <div class="step-icon-box" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+                <path d="M14 14h3v3h-3zM20 14v7M14 20h7"></path>
+              </svg>
+            </div>
+            <h3>Simpan E-Ticket QR</h3>
+            <p>Setelah pembayaran terkonfirmasi lunas, Kode Booking dan E-Ticket QR otomatis terbit di menu <strong>E-Ticket Saya</strong> dengan status <em>Belum Check-in</em>.</p>
+          </li>
+
+          <li class="surface-card step-card">
+            <span class="step-number" aria-hidden="true">03</span>
+            <div class="step-icon-box" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"></path>
+                <path d="M7 12h10"></path>
+              </svg>
+            </div>
+            <h3>Scan QR di Gerbang Masuk</h3>
+            <p>Tunjukkan QR kepada petugas di pintu masuk kawasan Dufan hingga status tiket berubah menjadi <em>Aktif di Kawasan</em> (tersedia tombol simulasi di E-Ticket Anda).</p>
+          </li>
+
+          <li class="surface-card step-card">
+            <span class="step-number" aria-hidden="true">04</span>
+            <div class="step-icon-box" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="M12 7v5l3 2"></path>
+              </svg>
+            </div>
+            <h3>Antre Virtual dari HP/Web</h3>
+            <p>Pilih wahana yang sesuai tinggi badan &amp; berstatus lampu hijau, ambil nomor antrean virtual, dan pantau nomor kloter serta estimasi waktu tunggu.</p>
+          </li>
+        </ol>
+
+        <div class="legend-bar" style="margin-block-start: 2rem;" aria-label="Aturan Antrean &amp; Status Lampu">
+          <div class="legend-group">
+            <span class="legend-title">Indikator Lampu:</span>
+            <span class="status-badge status-hijau"><span class="badge-icon" aria-hidden="true">●</span> Hijau · Siap Naik</span>
+            <span class="status-badge status-merah"><span class="badge-icon" aria-hidden="true">■</span> Merah · Sedang Bermain</span>
+            <span class="status-badge status-maintenance"><span class="badge-icon" aria-hidden="true">▲</span> Oranye · Maintenance</span>
+          </div>
+          <div class="legend-group">
+            <a href="wahana.html" class="btn btn-sm btn-primary">Pilih Wahana Sekarang</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="editorial-footer">
+    <div class="container editorial-footer-inner">
+      <a href="index.html" class="editorial-footer-brand">
+        <span>Jelajahin</span>
+      </a>
+      <ul class="editorial-footer-links">
+        <li><a href="index.html">Beranda</a></li>
+        <li><a href="wahana.html">Wahana</a></li>
+        <li><a href="paket.html">Paket Tiket</a></li>
+        <li><a href="cara-kerja.html">Cara Kerja</a></li>
+        <li><button type="button" class="footer-btn-link" id="btn-footer-eticket">E-Ticket Saya</button></li>
+      </ul>
+      <p class="editorial-footer-meta">
+        Dufan Ancol Jakarta · Status Hari Ini: <span id="footer-today-status">BUKA (10.00 – 18.00 WIB)</span>
+      </p>
+    </div>
+  </footer>
+
+  <!-- NATIVE <dialog> MODALS & DRAWERS -->
+  <dialog id="modal-search" class="modal-dialog modal-search" closedby="any" aria-labelledby="modal-search-title">
+    <div class="modal-shell">
+      <div class="modal-header">
+        <h2 id="modal-search-title">Cari Wahana Dufan</h2>
+        <button type="button" class="modal-close-btn" data-close-dialog="modal-search" aria-label="Tutup pencarian">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+            <path d="M18 6 6 18M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <search>
+          <div class="field-group">
+            <label for="quick-search-input">Nama Wahana atau Zona</label>
+            <span id="quick-search-hint" class="field-hint">Ketik misalnya "Halilintar", "Air", atau "Keluarga"</span>
+            <input type="search" id="quick-search-input" placeholder="Cari wahana cepat..." autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" aria-describedby="quick-search-hint" autofocus>
+          </div>
+        </search>
+        <div class="quick-search-results" id="quick-search-results"></div>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="modal-auth" class="modal-dialog modal-auth" closedby="any" aria-labelledby="modal-auth-title">
+    <div class="modal-shell">
+      <div class="modal-header">
+        <div>
+          <h2 id="modal-auth-title">Akun Wisatawan Jelajahin</h2>
+          <p class="modal-subtitle" id="auth-modal-subtitle">Masuk atau daftar akun untuk memesan tiket dan mengambil antrean virtual.</p>
+        </div>
+        <button type="button" class="modal-close-btn" data-close-dialog="modal-auth" aria-label="Tutup jendela akun">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+            <path d="M18 6 6 18M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="auth-logged-in-view" hidden>
+          <div class="account-profile-card">
+            <div class="account-avatar" id="account-avatar-initials" aria-hidden="true">BW</div>
+            <div class="account-meta">
+              <h3 id="account-display-name">Budi Wisatawan</h3>
+              <p id="account-display-email">budi@wisatawan.id</p>
+              <p class="account-submeta" id="account-display-extra">NIK: 3172••••••••0001 · WA: 081234567890</p>
+            </div>
+          </div>
+          <div class="account-actions-row">
+            <button type="button" class="btn btn-primary" id="btn-account-to-eticket">Lihat E-Ticket &amp; Antrean Saya</button>
+            <button type="button" class="btn btn-outline-danger" id="btn-logout">Keluar Akun</button>
+          </div>
+        </div>
+        <div id="auth-forms-view">
+          <div class="auth-tabs" role="tablist" aria-label="Pilih Masuk atau Daftar Akun">
+            <button type="button" class="auth-tab is-active" role="tab" id="tab-login" aria-selected="true" aria-controls="panel-login">Masuk</button>
+            <button type="button" class="auth-tab" role="tab" id="tab-register" aria-selected="false" aria-controls="panel-register" tabindex="-1">Daftar Akun</button>
+          </div>
+          <div id="panel-login" role="tabpanel" aria-labelledby="tab-login" class="auth-panel">
+            <form id="form-login" novalidate>
+              <div class="field-group">
+                <label for="login-email">Email <span aria-hidden="true">*</span></label>
+                <span id="login-email-hint" class="field-hint">Contoh: nama@email.com</span>
+                <input type="email" id="login-email" name="email" autocomplete="username" spellcheck="false" enterkeyhint="next" required pattern="[^@\s]+@[^@\s]+\.[^@\s]{2,}" aria-describedby="login-email-hint" data-error="login-email-error" autofocus>
+                <div id="login-email-error" class="error-msg">Masukkan alamat email yang valid.</div>
+              </div>
+              <div class="field-group">
+                <label for="login-password">Kata Sandi <span aria-hidden="true">*</span></label>
+                <span id="login-password-hint" class="field-hint">Minimal 8 karakter</span>
+                <div class="password-input-wrap">
+                  <input type="password" id="login-password" name="kata_sandi" autocomplete="current-password" minlength="8" enterkeyhint="done" required aria-describedby="login-password-hint" data-error="login-password-error">
+                  <button type="button" class="toggle-pwd-btn" data-toggle-password="login-password" aria-pressed="false" aria-label="Tampilkan kata sandi">Lihat</button>
+                </div>
+                <div id="login-password-error" class="error-msg">Kata sandi wajib diisi minimal 8 karakter.</div>
+              </div>
+              <div class="form-alert-error" id="login-form-alert" role="alert" hidden></div>
+              <button type="submit" class="btn btn-primary btn-full">Masuk ke Jelajahin</button>
+              <div class="demo-account-box">
+                <p>Ingin uji coba cepat tanpa mendaftar ulang?</p>
+                <button type="button" class="btn btn-sm btn-outline" id="btn-fill-demo-user">Masuk sebagai Akun Demo (Budi Wisatawan)</button>
+              </div>
+            </form>
+          </div>
+          <div id="panel-register" role="tabpanel" aria-labelledby="tab-register" class="auth-panel" hidden>
+            <form id="form-register" novalidate>
+              <div class="field-group">
+                <label for="reg-name">Nama Lengkap (sesuai KTP) <span aria-hidden="true">*</span></label>
+                <span id="reg-name-hint" class="field-hint">Digunakan pada E-Ticket masuk kawasan</span>
+                <input type="text" id="reg-name" name="nama_lengkap" autocomplete="name" enterkeyhint="next" required minlength="3" aria-describedby="reg-name-hint" data-error="reg-name-error">
+                <div id="reg-name-error" class="error-msg">Masukkan nama lengkap minimal 3 huruf.</div>
+              </div>
+              <div class="field-group">
+                <label for="reg-email">Email <span aria-hidden="true">*</span></label>
+                <span id="reg-email-hint" class="field-hint">Format: nama@domain.com</span>
+                <input type="email" id="reg-email" name="email" autocomplete="username" spellcheck="false" enterkeyhint="next" required pattern="[^@\s]+@[^@\s]+\.[^@\s]{2,}" aria-describedby="reg-email-hint" data-error="reg-email-error">
+                <div id="reg-email-error" class="error-msg">Masukkan alamat email yang valid.</div>
+              </div>
+              <div class="field-group">
+                <label for="reg-password">Kata Sandi <span aria-hidden="true">*</span></label>
+                <span id="reg-password-hint" class="field-hint">Minimal 8 karakter</span>
+                <div class="password-input-wrap">
+                  <input type="password" id="reg-password" name="kata_sandi" autocomplete="new-password" minlength="8" enterkeyhint="next" required aria-describedby="reg-password-hint" data-error="reg-password-error">
+                  <button type="button" class="toggle-pwd-btn" data-toggle-password="reg-password" aria-pressed="false" aria-label="Tampilkan kata sandi">Lihat</button>
+                </div>
+                <div id="reg-password-error" class="error-msg">Kata sandi harus terdiri dari minimal 8 karakter.</div>
+              </div>
+              <div class="field-row-2">
+                <div class="field-group">
+                  <label for="reg-nik">NIK (16 Digit) <span aria-hidden="true">*</span></label>
+                  <span id="reg-nik-hint" class="field-hint">Harus tepat 16 digit angka</span>
+                  <input type="text" id="reg-nik" name="nik" inputmode="numeric" pattern="\d{16}" maxlength="16" enterkeyhint="next" required aria-describedby="reg-nik-hint" data-error="reg-nik-error">
+                  <div id="reg-nik-error" class="error-msg">NIK wajib terdiri dari tepat 16 angka.</div>
+                </div>
+                <div class="field-group">
+                  <label for="reg-wa">Nomor WhatsApp <span aria-hidden="true">*</span></label>
+                  <span id="reg-wa-hint" class="field-hint">Contoh: 081234567890</span>
+                  <input type="tel" id="reg-wa" name="no_whatsapp" autocomplete="tel" pattern="^(08|\+?628)\d{7,12}$" enterkeyhint="done" required aria-describedby="reg-wa-hint" data-error="reg-wa-error">
+                  <div id="reg-wa-error" class="error-msg">Masukkan nomor WhatsApp aktif (diawali 08 atau +628).</div>
+                </div>
+              </div>
+              <div class="form-alert-error" id="register-form-alert" role="alert" hidden></div>
+              <button type="submit" class="btn btn-primary btn-full">Buat Akun Wisatawan</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="modal-booking" class="modal-dialog modal-booking" closedby="any" aria-labelledby="modal-booking-title">
+    <div class="modal-shell">
+      <div class="modal-header">
+        <div>
+          <h2 id="modal-booking-title">Pesan Tiket Masuk Dufan</h2>
+          <p class="modal-subtitle">Simulasi pemesanan instan — kuota harian berkurang otomatis dan E-Ticket QR langsung terbit.</p>
+        </div>
+        <button type="button" class="modal-close-btn" data-close-dialog="modal-booking" aria-label="Tutup pemesanan tiket">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+            <path d="M18 6 6 18M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="booking-auth-gate" class="gate-notice-box" hidden>
+          <h3>Masuk Akun Wisatawan Terlebih Dahulu</h3>
+          <p>Untuk menerbitkan Kode Booking dan E-Ticket QR atas nama Anda, silakan masuk atau daftar akun wisatawan.</p>
+          <button type="button" class="btn btn-primary" id="btn-booking-go-auth">Masuk / Daftar Sekarang</button>
+        </div>
+        <form id="form-booking" novalidate>
+          <div class="field-group">
+            <label for="booking-date">Tanggal Kunjungan <span aria-hidden="true">*</span></label>
+            <span id="booking-date-hint" class="field-hint">Hanya tanggal berstatus Buka dengan kuota tersisa yang dapat dipesan</span>
+            <input type="date" id="booking-date" name="tanggal_kunjungan" required aria-describedby="booking-date-hint" data-error="booking-date-error">
+            <div id="booking-date-error" class="error-msg">Pilih tanggal kunjungan yang valid dan masih buka.</div>
+            <div class="booking-quota-status" id="booking-quota-status" aria-live="polite"></div>
+          </div>
+          <fieldset class="booking-fieldset">
+            <legend>Pilih Paket Tiket Terusan</legend>
+            <div class="booking-package-options" id="booking-package-options"></div>
+          </fieldset>
+          <div class="field-row-2">
+            <div class="field-group">
+              <label for="booking-qty">Jumlah Tiket <span aria-hidden="true">*</span></label>
+              <span id="booking-qty-hint" class="field-hint">Maksimal 10 tiket per transaksi</span>
+              <div class="qty-stepper">
+                <button type="button" class="qty-btn" id="qty-minus" aria-label="Kurangi jumlah tiket">−</button>
+                <input type="number" id="booking-qty" name="jumlah_tiket" min="1" max="10" value="1" required aria-describedby="booking-qty-hint" data-error="booking-qty-error">
+                <button type="button" class="qty-btn" id="qty-plus" aria-label="Tambah jumlah tiket">+</button>
+              </div>
+              <div id="booking-qty-error" class="error-msg">Jumlah tiket harus antara 1 hingga batas sisa kuota.</div>
+            </div>
+            <fieldset class="booking-fieldset">
+              <legend>Metode Simulasi Pembayaran Instan</legend>
+              <div class="payment-options">
+                <label class="payment-radio-card">
+                  <input type="radio" name="metode_pembayaran" value="QRIS" checked>
+                  <span><strong>QRIS Instan</strong><small>GoPay, OVO, DANA, Mobile Banking</small></span>
+                </label>
+                <label class="payment-radio-card">
+                  <input type="radio" name="metode_pembayaran" value="Virtual Account">
+                  <span><strong>Virtual Account</strong><small>BCA, Mandiri, BNI, BRI</small></span>
+                </label>
+              </div>
+            </fieldset>
+          </div>
+          <div class="booking-summary-box">
+            <div class="summary-line"><span>Rincian</span><span id="booking-summary-detail">1 × Tiket Terusan Reguler</span></div>
+            <div class="summary-line"><span>Jatah Antrean Virtual Aktif</span><span id="booking-summary-slots">Maks. 2 wahana bersamaan</span></div>
+            <div class="summary-total-line"><strong>Total Pembayaran</strong><strong class="summary-price" id="booking-total-price">Rp 250.000</strong></div>
+          </div>
+          <div class="form-alert-error" id="booking-form-alert" role="alert" hidden></div>
+          <button type="submit" class="btn btn-primary btn-full" id="btn-confirm-payment">Konfirmasi Pembayaran</button>
+        </form>
+        <div id="booking-success-view" class="booking-success-box" hidden>
+          <div class="success-icon-circle" aria-hidden="true">✓</div>
+          <h3>Pembayaran Simulasi Berhasil (Lunas)</h3>
+          <p>Kode Booking dan E-Ticket QR Anda sudah terbit dengan status <strong>Belum Check-in</strong>.</p>
+          <div class="booking-success-code" id="booking-success-code">JLJ-20261119-001</div>
+          <div class="booking-success-actions">
+            <button type="button" class="btn btn-primary" id="btn-success-open-eticket">Buka E-Ticket &amp; QR Saya</button>
+            <button type="button" class="btn btn-outline" id="btn-success-book-again">Pesan Tiket Lagi</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="modal-eticket" class="drawer-dialog" closedby="any" aria-labelledby="modal-eticket-title">
+    <div class="drawer-shell">
+      <div class="drawer-header">
+        <div>
+          <h2 id="modal-eticket-title">E-Ticket &amp; Antrean Saya</h2>
+          <p class="drawer-subtitle" id="eticket-drawer-subtitle">Kelola tiket masuk QR dan antrean wahana virtual Anda.</p>
+        </div>
+        <button type="button" class="modal-close-btn" data-close-dialog="modal-eticket" aria-label="Tutup E-Ticket dan Antrean">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+            <path d="M18 6 6 18M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="drawer-body" id="eticket-drawer-body"></div>
+    </div>
+  </dialog>
+
+  <dialog id="mobile-nav-drawer" class="drawer-dialog drawer-nav" closedby="any" aria-labelledby="mobile-nav-title">
+    <div class="drawer-shell">
+      <div class="drawer-header">
+        <h2 id="mobile-nav-title" class="brand-wordmark">Jelajahin</h2>
+        <button type="button" class="modal-close-btn" data-close-dialog="mobile-nav-drawer" aria-label="Tutup menu navigasi">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+            <path d="M18 6 6 18M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="drawer-body">
+        <nav aria-label="Navigasi seluler">
+          <ul class="mobile-nav-list">
+            <li><a href="index.html" class="mobile-nav-link" data-mobile-nav="beranda">Beranda</a></li>
+            <li><a href="wahana.html#kuota" class="mobile-nav-link" data-mobile-nav="kuota">Info &amp; Kuota Harian</a></li>
+            <li><a href="wahana.html" class="mobile-nav-link" data-mobile-nav="wahana">Katalog Wahana</a></li>
+            <li><a href="paket.html" class="mobile-nav-link" data-mobile-nav="paket">Paket Tiket</a></li>
+            <li><a href="cara-kerja.html" class="mobile-nav-link" data-mobile-nav="cara-kerja">Cara Kerja</a></li>
+          </ul>
+        </nav>
+        <div class="mobile-nav-actions">
+          <button type="button" class="btn btn-outline btn-full" id="btn-mobile-eticket">E-Ticket &amp; Antrean Saya</button>
+          <button type="button" class="btn btn-outline btn-full" id="btn-mobile-auth">Masuk / Daftar Akun</button>
+          <button type="button" class="btn btn-primary btn-full" id="btn-mobile-book">PESAN TIKET SEKARANG</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+  <script src="script.js"></script>
+</body>
+</html>
