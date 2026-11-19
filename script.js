@@ -2561,36 +2561,122 @@
   });
 
   /* ------------------------------------------------------------------------
-     18. Loading Start Intro (Hanya Judul "Jelajahin" Terbang ke Kiri Atas)
+     18. Loading Start Intro (Perspective Tunnel Auto-Play + Judul "Jelajahin")
      ------------------------------------------------------------------------ */
+  function interpolatePiecewise(val, inputs, outputs) {
+    if (val <= inputs[0]) return outputs[0];
+    const last = inputs.length - 1;
+    if (val >= inputs[last]) return outputs[last];
+    for (let i = 0; i < last; i++) {
+      if (val >= inputs[i] && val <= inputs[i + 1]) {
+        const span = inputs[i + 1] - inputs[i] || 1;
+        const localT = (val - inputs[i]) / span;
+        return outputs[i] + (outputs[i + 1] - outputs[i]) * localT;
+      }
+    }
+    return outputs[last];
+  }
+
   function initIntroLoader() {
     const loader = document.getElementById('intro-loader');
     const brandText = document.getElementById('intro-brand');
+    const cardsHost = document.getElementById('intro-tunnel-cards');
     const navLogo = document.querySelector('.site-header .brand-wordmark');
 
-    if (!loader || !brandText) {
+    if (!loader || !brandText || !cardsHost) {
       if (loader) loader.hidden = true;
       document.body.classList.remove('is-intro-active', 'is-intro-revealing');
       return;
     }
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reducedMotion || typeof brandText.animate !== 'function') {
+    if (reducedMotion || typeof requestAnimationFrame !== 'function') {
       loader.hidden = true;
       document.body.classList.remove('is-intro-active', 'is-intro-revealing');
       return;
     }
 
     let introFinished = false;
-    const introTimers = [];
+    let rafId = null;
+    let revealTimer = null;
+    let finishTimer = null;
+    let flyAnim = null;
+
+    // Susun kartu wahana Dufan mengikuti spiral golden-angle 137.5° seperti Perspective Tunnel
+    const ridesList = Array.isArray(db?.wahanas) ? db.wahanas : [];
+    const totalCards = ridesList.length || 1;
+    const cardsData = ridesList.map((w, idx) => {
+      const theta = idx * 137.5 * (Math.PI / 180);
+      const radiusFactorX = 0.28 + (idx % 3) * 0.08;
+      const radiusFactorY = 0.26 + (idx % 2) * 0.09;
+      const rotationZ = (idx % 2 === 0 ? 1 : -1) * (3 + (idx % 5) * 2);
+      const start = (idx / totalCards) * 0.45;
+      const end = start + 0.55;
+
+      const cardEl = document.createElement('div');
+      cardEl.className = 'intro-tunnel-card';
+      cardEl.style.zIndex = String(idx + 1);
+      cardEl.style.opacity = '0';
+
+      const innerEl = document.createElement('div');
+      innerEl.className = 'intro-tunnel-card-inner';
+      innerEl.style.backgroundImage = w.gradasi_fallback;
+
+      const img = document.createElement('img');
+      img.src = w.gambar_url;
+      img.alt = '';
+      img.decoding = 'async';
+      img.loading = 'eager';
+      img.setAttribute('draggable', 'false');
+
+      const scrim = document.createElement('div');
+      scrim.className = 'intro-tunnel-card-scrim';
+      const titleSpan = document.createElement('span');
+      titleSpan.className = 'intro-tunnel-card-title';
+      titleSpan.textContent = w.nama_wahana;
+      scrim.appendChild(titleSpan);
+
+      innerEl.appendChild(img);
+      innerEl.appendChild(scrim);
+      cardEl.appendChild(innerEl);
+      cardsHost.appendChild(cardEl);
+
+      return {
+        el: cardEl,
+        angleCos: Math.cos(theta),
+        angleSin: Math.sin(theta),
+        radiusFactorX,
+        radiusFactorY,
+        rotationZ,
+        start,
+        end,
+      };
+    });
+
+    let pointerTargetX = 0;
+    let pointerTargetY = 0;
+    let pointerCurX = 0;
+    let pointerCurY = 0;
+
+    function onTunnelPointerMove(e) {
+      const w = window.innerWidth || 1280;
+      const h = window.innerHeight || 800;
+      pointerTargetX = (e.clientX / w - 0.5) * 2;
+      pointerTargetY = (e.clientY / h - 0.5) * 2;
+    }
 
     function finishIntroNow() {
       if (introFinished) return;
       introFinished = true;
-      introTimers.forEach((id) => clearTimeout(id));
-      document.removeEventListener('keydown', onIntroEscape);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      flyAnim?.cancel?.();
+      clearTimeout(revealTimer);
+      clearTimeout(finishTimer);
+      document.removeEventListener?.('keydown', onIntroEscape);
+      loader.removeEventListener?.('pointermove', onTunnelPointerMove);
       document.body.classList.remove('is-intro-active', 'is-intro-revealing');
       loader.hidden = true;
+      cardsHost.innerHTML = '';
     }
 
     function onIntroEscape(e) {
@@ -2598,23 +2684,71 @@
     }
 
     document.addEventListener('keydown', onIntroEscape);
+    loader.addEventListener('pointermove', onTunnelPointerMove, { passive: true });
 
-    // Tahap 1: Judul "Jelajahin" muncul halus di tengah
-    brandText.animate(
-      [
-        { opacity: 0, transform: 'scale(0.86)', filter: 'blur(8px)' },
-        { opacity: 1, transform: 'scale(1)', filter: 'blur(0px)' },
-      ],
-      { duration: 720, delay: 160, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', fill: 'both' }
-    );
+    const DURATION_MS = 2350;
+    const FLY_AT_MS = 2280;
+    const startTime = performance.now();
 
-    // Tahap 2: "Jelajahin" terbang & mengecil tepat ke posisi logo kiri atas navbar
-    const flyTimer = setTimeout(() => {
+    function renderTunnelFrame(now) {
       if (introFinished) return;
+      const elapsed = now - startTime;
+      const rawT = Math.min(1, Math.max(0, elapsed / DURATION_MS));
+      const easeSine = 0.5 - 0.5 * Math.cos(Math.PI * rawT);
+      const progress = rawT * 0.38 + easeSine * 0.62;
+
+      const vw = window.innerWidth || 1280;
+      const vh = window.innerHeight || 800;
+      const isMobile = vw < 768;
+      const cardWidth = isMobile
+        ? Math.max(130, Math.min(180, vw * 0.38))
+        : Math.max(185, Math.min(270, vw * 0.18));
+      const zMin = isMobile ? -1200 : -1700;
+      const zMax = isMobile ? 350 : 500;
+      const parallaxAmp = isMobile ? 18 : 42;
+
+      pointerCurX += (pointerTargetX - pointerCurX) * 0.1;
+      pointerCurY += (pointerTargetY - pointerCurY) * 0.1;
+
+      const textScale = interpolatePiecewise(progress, [0, 0.35, 1], [0.74, 0.96, 1]);
+      const textOpacity = interpolatePiecewise(progress, [0, 0.14, 1], [0.3, 1, 1]);
+      brandText.style.transform = `scale(${textScale.toFixed(4)})`;
+      brandText.style.opacity = textOpacity.toFixed(3);
+
+      cardsData.forEach((c) => {
+        const localT = Math.min(1, Math.max(0, (progress - c.start) / (c.end - c.start)));
+        const z = zMin + (zMax - zMin) * localT;
+        const opacity = interpolatePiecewise(localT, [0, 0.18, 0.82, 0.98], [0, 1, 1, 0]);
+        const offsetX = c.angleCos * (vw * c.radiusFactorX) - pointerCurX * parallaxAmp;
+        const offsetY = c.angleSin * (vh * c.radiusFactorY) - pointerCurY * parallaxAmp;
+
+        c.el.style.width = `${cardWidth.toFixed(1)}px`;
+        c.el.style.opacity = opacity.toFixed(3);
+        c.el.style.transform = `translate3d(calc(-50% + ${offsetX.toFixed(1)}px), calc(-50% + ${offsetY.toFixed(1)}px), ${z.toFixed(1)}px) rotateZ(${c.rotationZ}deg)`;
+      });
+
+      if (rawT < 1) {
+        rafId = requestAnimationFrame(renderTunnelFrame);
+      } else {
+        rafId = null;
+      }
+    }
+
+    rafId = requestAnimationFrame(renderTunnelFrame);
+
+    // Tahap 2: Setelah tunnel selesai, teks "Jelajahin" terbang ke logo kiri atas navbar
+    revealTimer = setTimeout(() => {
+      if (introFinished) return;
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+      brandText.style.transform = 'scale(1)';
+      brandText.style.opacity = '1';
       loader.classList.add('is-revealing');
       document.body.classList.add('is-intro-revealing');
 
-      if (navLogo) {
+      if (navLogo && typeof brandText.animate === 'function') {
         const fromRect = brandText.getBoundingClientRect();
         const toRect = navLogo.getBoundingClientRect();
         if (fromRect.width > 0 && toRect.width > 0) {
@@ -2626,7 +2760,7 @@
           const dy = toCenterY - fromCenterY;
           const scaleRatio = toRect.height / fromRect.height;
 
-          const flyAnim = brandText.animate(
+          flyAnim = brandText.animate(
             [
               { transform: 'translate3d(0, 0, 0) scale(1)', opacity: 1 },
               { transform: `translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0) scale(${scaleRatio.toFixed(4)})`, opacity: 1 },
@@ -2634,15 +2768,13 @@
             { duration: 920, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'both' }
           );
           flyAnim.onfinish = finishIntroNow;
-          introTimers.push(setTimeout(finishIntroNow, 980));
+          finishTimer = setTimeout(finishIntroNow, 980);
           return;
         }
       }
 
-      introTimers.push(setTimeout(finishIntroNow, 850));
-    }, 1400);
-
-    introTimers.push(flyTimer);
+      finishTimer = setTimeout(finishIntroNow, 920);
+    }, FLY_AT_MS);
   }
 
   /* ------------------------------------------------------------------------

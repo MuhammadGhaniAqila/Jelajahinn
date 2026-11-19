@@ -12,10 +12,19 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="is-intro-active">
-  <!-- Loading Start Intro: Hanya Judul "Jelajahin" di Tengah Lalu Terbang ke Kiri Atas -->
-  <div class="intro-loader" id="intro-loader" role="presentation">
-    <div class="intro-backdrop" id="intro-backdrop" aria-hidden="true"></div>
-    <div class="intro-center-brand" id="intro-brand" aria-hidden="true">Jelajahin</div>
+  <!-- Loading Start Intro: 3D Perspective Tunnel Auto-Play dengan Judul Tengah "Jelajahin" -->
+  <div class="intro-loader" id="intro-loader" role="presentation" aria-hidden="true">
+    <div class="intro-tunnel-bg" aria-hidden="true">
+      <div class="intro-tunnel-grid"></div>
+      <div class="intro-tunnel-aura"></div>
+      <div class="intro-tunnel-ring intro-tunnel-ring--inner"></div>
+      <div class="intro-tunnel-ring intro-tunnel-ring--outer"></div>
+    </div>
+
+    <div class="intro-tunnel-stage" id="intro-tunnel-stage">
+      <div class="intro-center-brand" id="intro-brand" data-text="Jelajahin">Jelajahin</div>
+      <div class="intro-tunnel-cards" id="intro-tunnel-cards"></div>
+    </div>
   </div>
 
   <a href="#konten-utama" class="skip-link visually-hidden">Langsung ke konten utama</a>
